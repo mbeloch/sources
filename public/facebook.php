@@ -5,7 +5,7 @@
     <title></title>
 </head>
 <body>
-	<a href="public/facebook.php">Facebook</a>
+	<a href="../index.php">Home</a>
 <?php
 	
 
