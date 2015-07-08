@@ -12,6 +12,13 @@ session_start();
 require_once "Dropbox/autoload.php";
 use \Dropbox as dbx;
 
+function showDropboxMedia($client){
+    $neco = $client->getAccountInfo();
+    print_r($neco);
+    $data = $client->getMetadataWithChildren("/");
+    print_r($data);
+}
+
 if (!(isset($_SESSION['Drobpox']) && $_SESSION['Drobpox'] == true)) {
     function getWebAuth()
     {
@@ -50,12 +57,19 @@ if (!(isset($_SESSION['Drobpox']) && $_SESSION['Drobpox'] == true)) {
     $_SESSION['Drobpox'] = true;
 // We can now use $accessToken to make API requests.
     $client = new dbx\Client($accessToken, $userId, $urlState);
-    $_SESSION['token'] = $client;
-    $client->getAccessToken();
+    $_SESSION['token'] = $client->getAccessToken();
+    $_SESSION['userId'] = $client->getClientIdentifier();
+    //$client->getAccessToken();
+    showDropboxMedia($client);
 }else {
-    print_r($_SESSION['token']);
+    if(isset($_SESSION['token'])){
+        echo "necum";
+        $client = new dbx\Client($_SESSION['token'], $_SESSION['userId']);
+        //print_r($_SESSION['token']);
+        //print_r($client->getAccountInfo());
+        showDropboxMedia($client);
+    }
 }
-
 
 ?>
 </body>
