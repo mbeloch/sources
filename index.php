@@ -10,8 +10,6 @@
 <?php
 session_start();
 
-$_SESSION['Drobpox'] = false;
-$_SESSION['Drobpox_token'] = null;
 ?>
 </body>
 </html>

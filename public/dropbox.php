@@ -13,10 +13,28 @@ require_once "Dropbox/autoload.php";
 use \Dropbox as dbx;
 
 function showDropboxMedia($client){
-    $neco = $client->getAccountInfo();
-    print_r($neco);
-    $data = $client->getMetadataWithChildren("/");
-    print_r($data);
+    $data = $client->getDelta($cursor = null, $path = null);
+    foreach ($data['entries'] as $entry){
+        //print_r($entry[0]);
+        foreach ($entry as $photo){
+            if (isset($photo['mime_type'])){
+                print_r($photo);
+                echo "<br/>";
+                $fd = fopen("thumb/".$photo['rev'].".jpeg", "wb");
+                $metadata = $client->getFile($photo['path'], $fd);
+                //$metadata = $client->getThumbnail($photo['path'], 'jpeg', 'm');
+                fclose($fd);
+                echo '<img src="thumb/'.$photo['rev'].'.jpeg" />';
+            }
+        }
+        $thumbnail = $client->getThumbnail($entry[0], 'jpeg', 'm');
+        //print_r($thumbnail[0]);
+        //print_r($thumbnail[1]);
+        //echo '<img src="'.$entry[0].'" />';
+        //echo '<img src="'.$client->getThumbnail($entry[0], 'png', 'm').'" />';
+        //print_r($client->getThumbnail($entry[0], 'png', 'm'));
+        echo "<br/>";
+    }
 }
 
 if (!(isset($_SESSION['Drobpox']) && $_SESSION['Drobpox'] == true)) {
@@ -63,7 +81,6 @@ if (!(isset($_SESSION['Drobpox']) && $_SESSION['Drobpox'] == true)) {
     showDropboxMedia($client);
 }else {
     if(isset($_SESSION['token'])){
-        echo "necum";
         $client = new dbx\Client($_SESSION['token'], $_SESSION['userId']);
         //print_r($_SESSION['token']);
         //print_r($client->getAccountInfo());
