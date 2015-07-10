@@ -6,6 +6,9 @@
 </head>
 <body>
 	<a href="../index.php">Home</a>
+    <br/>
+    <a href="facebook.php">Albums</a>
+    <br/>
 <?php
 session_start();
 define('FB_DIR', '/FB/src/Facebook/');
@@ -35,7 +38,6 @@ function getCoverPhoto($photoId, $session){
 
 if (isset($_SESSION['FB']) && ($_SESSION['FB']) == true) {
     if (isset($_SESSION['valid']) && $_SESSION['valid'] == true) {
-        echo $_SESSION['usernameFB'];
         $albumId = htmlspecialchars($_GET["albumId"]);
         $session = new FacebookSession($_SESSION['fb_token']);
 

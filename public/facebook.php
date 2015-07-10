@@ -6,11 +6,12 @@
 </head>
 <body>
 	<a href="../index.php">Home</a>
+    <br/>
 <?php
 session_start();
 
 define('facebook-php-sdk-v4-4.0-dev', '/FB/src/Facebook/');
-require __DIR__ . '/FB/autoload.php';	
+require __DIR__ . '/FB/autoload.php';
 
 use Facebook\FacebookSession;
 use Facebook\FacebookRedirectLoginHelper;
@@ -28,24 +29,26 @@ if (isset($_SESSION['FB']) && ($_SESSION['FB']) == true) {
     if (isset($_SESSION['valid']) && $_SESSION['valid'] == true) {
         $session = new FacebookSession($_SESSION['fb_token']);
     }
+}else {
+    $helper = new FacebookRedirectLoginHelper($redirect_url);
+    try {
+        $session = $helper->getSessionFromRedirect();
+    } catch(FacebookRequestException $ex) {
+        // When Facebook returns an error
+    } catch(\Exception $ex) {
+        // When validation fails or other local issues
+    }
+    if ($session) {
+        // Logged in.
+    }
+
+    if (!$session){
+        $scope = array('user_photos');
+        echo '<a href="' . $helper->getLoginUrl($scope) . '">Login with Facebook</a>';
+    }
 }
 
-$helper = new FacebookRedirectLoginHelper($redirect_url);
-try {
-    $session = $helper->getSessionFromRedirect();
-} catch(FacebookRequestException $ex) {
-    // When Facebook returns an error
-} catch(\Exception $ex) {
-    // When validation fails or other local issues
-}
-if ($session) {
-    // Logged in.
-}
 
-if (!$session){
-    $scope = array('user_photos');
-    echo '<a href="' . $helper->getLoginUrl($scope) . '">Login with Facebook</a>';
-}
 
 function getCoverPhoto($photoId, $session){
     $request = new FacebookRequest(
@@ -93,12 +96,11 @@ if($session) {
 
     foreach ($graphObject as $album) {
         echo $album->getProperty('name');
+        echo "<br/>";
         $id = $album->getProperty('id');
         echo "<a href='facebook-photos.php?albumId=".$id."'><img src='" . getCoverPhoto($album->getProperty('cover_photo'), $session) . "' /></a>";
         echo '<br/>';
     }
-
-
 }
 
 ?>
