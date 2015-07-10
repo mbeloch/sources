@@ -18,16 +18,20 @@ function showDropboxMedia($client){
         //print_r($entry[0]);
         foreach ($entry as $photo){
             if (isset($photo['mime_type'])){
-                print_r($photo);
-                echo "<br/>";
-                $fd = fopen("thumb/".$photo['rev'].".jpeg", "wb");
-                $metadata = $client->getFile($photo['path'], $fd);
+                //print_r($photo);
+                //echo "<br/>";
+                //$fd = fopen("thumb/".$photo['rev'].".jpeg", "wb");
+                //$metadata = $client->getFile($photo['path'], $fd);
                 //$metadata = $client->getThumbnail($photo['path'], 'jpeg', 'm');
-                fclose($fd);
-                echo '<img src="thumb/'.$photo['rev'].'.jpeg" />';
+                //fclose($fd);
+                //echo '<img src="thumb/'.$photo['rev'].'.jpeg" />';
+                $thumbnail = $client->getThumbnail($photo['path'], 'jpeg', 'm');
+                echo '<img alt="Embedded Image" src="data:image/jpeg;base64,'.base64_encode($thumbnail[1]).'" />';
+                //header("Content-Type: image/jpeg");
+                //echo($thumbnail[1]);
             }
         }
-        $thumbnail = $client->getThumbnail($entry[0], 'jpeg', 'm');
+        //$thumbnail = $client->getThumbnail($entry[0], 'jpeg', 'm');
         //print_r($thumbnail[0]);
         //print_r($thumbnail[1]);
         //echo '<img src="'.$entry[0].'" />';
