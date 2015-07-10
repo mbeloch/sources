@@ -32,8 +32,8 @@ function getCoverPhoto($photoId, $session){
     $response = $request->execute();
     $graphObject = $response->getGraphObject();
     $graphObject = $graphObject->getPropertyAsArray('images');
-    $pocet = count($graphObject);
-    return $graphObject[$pocet-1]->getProperty('source');
+    $pocet = count($graphObject)-1;
+    return $graphObject[$pocet]->getProperty('source');
 }
 
 if (isset($_SESSION['FB']) && ($_SESSION['FB']) == true) {
