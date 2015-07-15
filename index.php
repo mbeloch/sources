@@ -10,7 +10,6 @@
     <a href="public/flickr.php">Flickr</a><br/>
 <?php
 session_start();
-$_SESSION['phpFlickr_auth_token'] = null;
 ?>
 </body>
 </html>

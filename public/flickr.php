@@ -7,20 +7,39 @@
 <body>
 <a href="../index.php">Home</a>
 <?php
-session_start();
+//session_start();
 
-require_once("Flickr/phpFlickr.php");
-$f = new phpFlickr("d925ecaf7b9a61d1e2c8344951b2151a", "b033177611b72fa7");
-//change this to the permissions you will need
-if (!isset($_SESSION['phpFlickr_auth_token'])){
-    $f->auth("read");
-    $_SESSION['phpFlickr_auth_token'] = $f->auth_getToken($f->auth_getFrob());
+include ('Flickr/Flickr-dbz.php');
+use \DPZ\Flickr;
+
+$flickrApiKey = 'd925ecaf7b9a61d1e2c8344951b2151a';
+$flickrApiSecret = '';
+
+// Build the URL for the current page and use it for our callback
+$callback = 'http://localhost/sources/public/flickr.php';
+$flickr = new Flickr($flickrApiKey, $flickrApiSecret, $callback);
+if (!$flickr->authenticate('read'))
+{
+    die("Hmm, something went wrong...\n");
 }
-$_SESSION['phpFlickr_auth_token'] = $f->auth_getToken($f->auth_getFrob());
-
-print_r($neco);
-
-echo "Copy this token into your code: " . $_SESSION['phpFlickr_auth_token'];
+$userNsid = $flickr->getOauthData(Flickr::USER_NSID);
+$userName = $flickr->getOauthData(Flickr::USER_NAME);
+$userFullName = $flickr->getOauthData(Flickr::USER_FULL_NAME);
+$parameters =  array(
+    'per_page' => 100,
+    'extras' => 'url_sq,path_alias',
+);
+$response = $flickr->call('flickr.stats.getPopularPhotos', $parameters);
+$ok = @$response['stat'];
+if ($ok == 'ok')
+{
+    $photos = $response['photos'];
+}
+else
+{
+    $err = @$response['err'];
+    die("Error: " . @$err['msg']);
+}
 
 
 ?>
