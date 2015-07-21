@@ -50,12 +50,19 @@ if (isset($_SESSION['FB']) && ($_SESSION['FB']) == true) {
         $graphObject = $response->getGraphObject();
         $graphObject = $graphObject->getPropertyAsArray('data');
 
+        $photecka = $response->getGraphObject();
+        $photecka;
+
+
+
         foreach ($graphObject as $photo) {
             //echo $photo->getProperty('name');
             $id = $photo->getProperty('id');
             echo "<img src='" . getCoverPhoto($id, $session) . "' />";
             echo '<br/>';
         }
+
+        print_r($response.paging);
 
 
         // echo <a href="' . $_SESSION['logoutUrlFB'] . '">Logout FB</a>

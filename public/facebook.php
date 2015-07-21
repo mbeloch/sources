@@ -10,7 +10,7 @@
 <?php
 session_start();
 
-define('facebook-php-sdk-v4-4.0-dev', '/FB/src/Facebook/');
+//define('facebook-php-sdk-v4-4.0-dev', '/FB/src/Facebook/');
 require __DIR__ . '/FB/autoload.php';
 
 use Facebook\FacebookSession;
@@ -51,16 +51,21 @@ if (isset($_SESSION['FB']) && ($_SESSION['FB']) == true) {
 
 
 function getCoverPhoto($photoId, $session){
-    $request = new FacebookRequest(
-        $session,
-        'GET',
-        '/'.$photoId
-    );
-    $response = $request->execute();
-    $graphObject = $response->getGraphObject();
-    $graphObject = $graphObject->getPropertyAsArray('images');
-    $pocet = count($graphObject);
-    return $graphObject[$pocet-1]->getProperty('source');
+    if ($photoId){
+        $request = new FacebookRequest(
+            $session,
+            'GET',
+            '/'.$photoId
+        );
+        $response = $request->execute();
+        $graphObject = $response->getGraphObject();
+        $graphObject = $graphObject->getPropertyAsArray('images');
+        $pocet = count($graphObject);
+        return $graphObject[$pocet-1]->getProperty('source');
+    }else {
+        return false;
+    }
+
 }
 
 if($session) {
@@ -98,9 +103,17 @@ if($session) {
         echo $album->getProperty('name');
         echo "<br/>";
         $id = $album->getProperty('id');
-        echo "<a href='facebook-photos.php?albumId=".$id."'><img src='" . getCoverPhoto($album->getProperty('cover_photo'), $session) . "' /></a>";
+        if (!$album->getProperty('cover_photo')){
+            echo "nema fotku";
+            $coverPhoto = false;
+        }else {
+            $coverPhoto = $album->getProperty('cover_photo');
+        }
+        echo "<a href='facebook-photos.php?albumId=".$id."'><img src='" . getCoverPhoto($coverPhoto, $session) . "' /></a>";
         echo '<br/>';
     }
+
+    print_r($graphObject[0]);
 }
 
 ?>

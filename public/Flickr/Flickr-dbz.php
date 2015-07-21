@@ -184,13 +184,11 @@ class Flickr
         $ok = ($this->isAuthenticated() && $this->doWeHaveGoodEnoughPermissions($permissions));
         if (!$ok)
         {
-            echo 'necum4';
             // We're authenticating afresh, clear out the session just in case there are remnants of a
             // previous authentication in there
             //$this->signout();
             if ($this->obtainRequestToken())
             {
-                echo 'necum5';
                 // We've got the request token, redirect to Flickr for authentication/authorisation
                 // Make a note in the session of where we are first
                 $this->setOauthData(self::IS_AUTHENTICATING, true);
@@ -233,8 +231,6 @@ class Flickr
      */
     public function getOauthData($key)
     {
-        echo "jooo ".$key."<br/>";
-        print_r($_SESSION);
         $val = NULL;
         $data = @$_SESSION[self::SESSION_OAUTH_DATA];
         if (is_array($data))
@@ -581,7 +577,6 @@ class Flickr
     private function httpRequest($url, $parameters, $metod = NULL)
     {
         if ($metod == 'GET'){
-            echo 'joooooooo';
             $this->method = 'GET';
         }
         $curl = curl_init();
@@ -592,14 +587,12 @@ class Flickr
             curl_setopt($curl, CURLOPT_URL, $url);
             curl_setopt($curl, CURLOPT_POST, TRUE);
             curl_setopt($curl, CURLOPT_POSTFIELDS, $parameters);
-            echo "POOOOOOST";
         }
         else
         {
             // Assume GET
             $curl = curl_init("$url?" . $this->joinParameters($parameters));
             curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-            echo "GEEEEEEEEEEEEEEEEEEEEEET";
         }
         $response = curl_exec($curl);
         $headers = curl_getinfo($curl);
@@ -610,7 +603,6 @@ class Flickr
         }
         curl_close($curl);
         $this->lastHttpResponseCode = $headers['http_code'];
-        print_r($response);
         return $response;
     }
 }
