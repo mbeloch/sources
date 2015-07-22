@@ -13,7 +13,6 @@
     <a href="public/drive2.php">Google Drive - test</a><br/>
 <?php
 session_start();
-
 ?>
 </body>
 </html>
