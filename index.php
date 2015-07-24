@@ -8,7 +8,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 </head>
 <body>
-	<a href="public/facebook.php">Facebook</a><br/>
+	<a href="public/facebook.html">Facebook</a><br/>
     <a href="public/facebook-new.php">Facebook-new</a><br/>
     <a href="public/dropbox-login.php">Dropbox</a><br/>
     <a href="public/flickr.php">Flickr</a><br/>
@@ -18,7 +18,7 @@
 session_start();
 ?>
 <div id="content"></div>
-    <script src="public/js/ajax-test.js" type="text/jsx"></script>
+    <script src="js/ajax-test.js" type="text/jsx"></script>
 
 </body>
 </html>

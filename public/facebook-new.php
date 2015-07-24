@@ -18,7 +18,11 @@ if(!isset($_SESSION['facebook_access_token'])){
     $permissions = ['user_about_me', 'email', 'user_photos']; // optional
     $loginUrl = $helper->getLoginUrl('http://localhost/sources/public/fb-login-callback.php', $permissions);
 
-    echo '<a href="' . $loginUrl . '">Log in with Facebook!</a>';
+    //echo '<a href="' . $loginUrl . '">Log in with Facebook!</a>';
+    $data = array('login' => $loginUrl);
+    header('Content-Type: application/json');
+    echo json_encode($data);
+
 }else {
     $fb->setDefaultAccessToken($_SESSION['facebook_access_token']);
     userAlbums($fb);
