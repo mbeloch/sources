@@ -17,6 +17,15 @@ function getCoverPhoto($fb, $photoId)
     return $graphNode['images'][$index - 2]['source'];
 }
 
+function getCoverPhoto2($fb, $photoId)
+{
+    $request = $fb->request('GET', $photoId . '/?fields=images');
+    $response = fbRequest($fb, $request);
+    $graphNode = $response->getGraphNode();
+    $graphNode = $graphNode->asArray();
+    return $graphNode;
+}
+
 function fbRequest($fb, $request)
 {
     try {
@@ -35,7 +44,7 @@ function fbRequest($fb, $request)
 
 function userAlbums($fb)
 {
-    if (getFbPermissions($fb)){
+    if (getFbPermissions($fb)) {
         $request = $fb->request('GET', '/me?fields=albums{cover_photo,name}');
         $response = fbRequest($fb, $request);
 
@@ -54,7 +63,7 @@ function userAlbums($fb)
             }
         }
         echo "<a href='facebook-photos-new.php?albumId=me'><img src='" . getCoverPhoto($fb, $neco['cover_photo']['id']) . "' /></a>";
-    }else {
+    } else {
         echo "nemas permisn potvrd ho";
         $helper = $fb->getRedirectLoginHelper();
         $permissions = ['user_photos']; // optional
@@ -63,24 +72,25 @@ function userAlbums($fb)
     }
 }
 
-function fbNext($fb, $nextFeed){
-    if ($nextFeed){
+function fbNext($fb, $nextFeed)
+{
+    if ($nextFeed) {
         $dalsiFeed = $fb->next($nextFeed);
         foreach ($nextFeed as $graphNode) {
             $smrdi = $graphNode->getField('id');
             echo "<a href='facebook-download.php?photoId=" . $smrdi . "' target='_blank'><img src='" . getCoverPhoto($fb, $smrdi) . "' /></a>";
         }
-        if ($dalsiFeed){
+        if ($dalsiFeed) {
             fbNext($fb, $dalsiFeed);
         }
-    }else {
+    } else {
         return;
     }
 }
 
 function userPhotos($fb, $albumId)
 {
-    if($albumId == 'me'){
+    if ($albumId == 'me') {
         $albumId = '1540715021';
     }
     $request = $fb->request('GET', $albumId . '/photos');
@@ -90,6 +100,58 @@ function userPhotos($fb, $albumId)
     $graphEdge = $response->getGraphEdge();
 
     fbNext($fb, $graphEdge);
+}
+
+function getPhotos($fb, $edge, &$photos){
+    foreach ($edge as $photo) {
+        $photos["data"][] = $photo->asArray();
+    }
+    $nextFeed = $fb->next($edge);
+    if ($nextFeed){
+        getPhotos($fb, $nextFeed, $photos);
+    }
+}
+
+function userPhotos2($fb, $albumId)
+{
+    $request = $fb->request('GET', $albumId . '/photos');
+    $response = fbRequest($fb, $request);
+    $graphEdge = $response->getGraphEdge();
+    //$dalsiFeed = $fb->next($graphEdge);
+    //var_dump($dalsiFeed);
+    $photos = array();
+    $photos["data"] = array();
+    //$pole["paging"] = array();
+    /*
+    foreach ($graphEdge as $graphNode) {
+        $smrdi = $graphNode->asArray();
+        $pole["data"][] = $smrdi;
+    }
+    */
+    getPhotos($fb, $graphEdge, $photos);
+    return $photos;
+}
+
+function userPhotos3($fb, $albumId)
+{
+    $request = $fb->request('GET', $albumId . '/photos');
+    $response = fbRequest($fb, $request);
+    $graphEdge = $response->getGraphEdge();
+    //$dalsiFeed = $fb->next($graphEdge);
+    //var_dump($dalsiFeed);
+    $photos = array();
+    $photos["data"] = array();
+    $photos["paging"] = array();
+
+    foreach ($graphEdge as $graphNode) {
+        $photos["data"][] = $graphNode->asArray();
+    }
+    $nextUrl = $graphEdge->getMetaData();
+    if(isset($nextUrl["paging"]["next"])){
+        $photos["paging"]["next"] = $nextUrl["paging"]["next"];
+    }
+    //getPhotos($fb, $graphEdge, $photos);
+    return $photos;
 }
 
 function downloadUrl($fb, $photoId)
@@ -103,15 +165,16 @@ function downloadUrl($fb, $photoId)
     return $graphNode['images'][0]['source'];
 }
 
-function getFbPermissions($fb){
+function getFbPermissions($fb)
+{
     $request = $fb->request('GET', '/me?fields=permissions');
     $response = fbRequest($fb, $request);
 
     $graphNode = $response->getGraphNode();
     $graphNode = $graphNode->asArray();
     $photoPerm = false;
-    foreach($graphNode['permissions'] as $permission){
-        if (($permission['permission'] == 'user_photos') && ($permission['status'] == 'granted')){
+    foreach ($graphNode['permissions'] as $permission) {
+        if (($permission['permission'] == 'user_photos') && ($permission['status'] == 'granted')) {
             $photoPerm = true;
         }
     }

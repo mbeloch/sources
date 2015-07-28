@@ -18,7 +18,6 @@
 session_start();
 ?>
 <div id="content"></div>
-    <script src="js/ajax-test.js" type="text/jsx"></script>
 
 </body>
 </html>

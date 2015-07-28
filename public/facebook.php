@@ -16,13 +16,28 @@ if(!isset($_SESSION['facebook_access_token'])){
 
 }else {
     $fb->setDefaultAccessToken($_SESSION['facebook_access_token']);
-    //userAlbums($fb);
     $request = $fb->request('GET', '/me?fields=albums{cover_photo,name}');
     $response = fbRequest($fb, $request);
 
     $graphNode = $response->getGraphNode();
-    $graphNode = $graphNode->asJson();
+    $graphNode2 = $graphNode ->asArray();
+
+    for ($i=0; $i<count($graphNode2['albums']); $i++){
+        if(isset($graphNode2['albums'][$i]['cover_photo'])){
+            $photos = getCoverPhoto2($fb, $graphNode2['albums'][$i]["cover_photo"]["id"]);
+            $graphNode2['albums'][$i]["image"] = $photos['images'][count($photos['images'])-2]['source'];
+        }
+    }
+    /*
+    foreach ($graphNode2['albums'] as $album){
+        if(isset($album['cover_photo'])){
+            $photos = getCoverPhoto2($fb, $album["cover_photo"]["id"]);
+            //var_dump($photos);
+            $album["image"] = $photos['images'][count($photos['images'])-2]['source'];
+        }
+    }
+    */
 
     header('Content-Type: application/json');
-    echo ($graphNode);
+    echo json_encode($graphNode2);
 }
