@@ -9,6 +9,7 @@
 </head>
 <body>
 	<a href="public/facebook.html">Facebook</a><br/>
+    <a href="public/facebook2.html">Facebook2</a><br/>
     <a href="public/facebook-new.php">Facebook-new</a><br/>
     <a href="public/dropbox-login.php">Dropbox</a><br/>
     <a href="public/flickr.php">Flickr</a><br/>

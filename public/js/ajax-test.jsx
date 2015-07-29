@@ -18,6 +18,7 @@ var UserGist = React.createClass({
                         showLogin: true
                     });
                 }else {
+                    window.loggedIn = true;
                     this.setState({
                         showAlbums: true,
                         albums: lastGist.albums
@@ -104,5 +105,6 @@ React.render(
     <UserGist source="/sources/public/facebook.php" />,
     document.getElementById('content')
 );
+
 
 
