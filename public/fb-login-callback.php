@@ -19,6 +19,6 @@ try {
 if (isset($accessToken)) {
     // Logged in!
     $_SESSION['facebook_access_token'] = (string) $accessToken;
-    header('Location: http://localhost/sources/public/facebook.html');
+    header('Location: http://localhost/sources/public/facebook2.html');
 
 }

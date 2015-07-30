@@ -21,14 +21,13 @@ if(!isset($_SESSION['facebook_access_token'])){
         $albumId = htmlspecialchars($_GET["albumId"]);
         $fotky = userPhotos3($fb, $albumId);
 
-        /*
+
         for ($i=0; $i<count($fotky["data"]); $i++){
             $photos = getCoverPhoto2($fb, $fotky["data"][$i]["id"]);
-            $fotky["data"][$i]["image"] = $photos["images"][count($photos["images"])-2]["source"];
-        }
-        */
+            //$fotky["data"][$i]["image"] = $photos["images"][count($photos["images"])-2]["source"];
+            $fotky["data"][$i]["images"] = $photos["images"];
 
-        //var_dump($fotky);
+        }
 
         header('Content-Type: application/json');
         echo json_encode($fotky);
